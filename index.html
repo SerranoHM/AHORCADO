@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AHORCADO</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <section>
+        <input type="text" id="letra" placeholder="escribe la letra">
+        <input type="button" id="boton" value="verificar"><br>
+       <div id="frases"> 
+
+       </div>
+
+        <div id="vida">
+            el numero de vida que te quedan son: 5
+        </div>
+    </section>
+    <section>
+        <canvas id="lienzo">
+
+        </canvas>
+    </section>
+    <script type="text/javascript">
+        let palabras = Array("celular","elefante","dinosaurio","messi","cristiano",
+        "html");
+        let palabra = "";//palabra oculta al usuario
+        let palabra1 = "";//palabra que va adivinando el usuario
+        let vidas = 5;
+        document.getElementById("boton").addEventListener("click",examinar);
+        iniciar();
+
+        function iniciar(){
+            palabra=palabras[Math.floor(Math.random()*palabras.length)];
+            
+            for(let i=0;i<palabra.length;i++){
+                palabra1=palabra1+"_ ";
+            }
+            document.getElementById("frases").innerHTML=palabra1;
+        }
+
+        function examinar(){
+            let letra = document.getElementById("letra").value.toLowerCase();
+            palabra = palabra.toLowerCase();
+            let nuevo = "";
+            for(let i=0;i<palabra.length;i++){
+                if (letra==palabra[i]) {
+                    nuevo = nuevo + letra + " ";
+                }else{
+                    nuevo = nuevo + palabra1[i*2] + " ";
+                }
+            }
+            if(nuevo==palabra1){
+                vidas--;
+                document.getElementById("vida").innerHTML="el numero de vida que te quedan son: " + vidas;
+
+            }
+            palabra1 = nuevo;
+            document.getElementById("frases").innerHTML=palabra1;
+
+            if(vidas==0){
+                alert("GAME OVER");
+            }
+            if(palabra1.search("_")==-1){
+                alert("WIN");
+            }
+            document.getElementById("letra").value=" ";
+            document.getElementById("letra").focus();
+
+            dibujar();
+        }
+
+        function dibujar(){
+            var canvas = document.getElementById("lienzo");
+            if(canvas.getContext){
+                var ctx = canvas.getContext("2d");
+                //esto dibuja la base
+                if (vidas<=4) {
+                ctx.beginPath();
+                ctx.moveTo(30,200);
+                ctx.lineTo(30,10);
+                ctx.lineTo(150,10);
+                ctx.lineTo(150,20);
+                ctx.stroke(); 
+                }
+                //dibuja la cabeza
+                if(vidas<=3){
+                ctx.beginPath();
+                ctx.arc(150,40,20,0,Math.PI*2);
+                ctx.stroke();
+            }
+                //dibuja el cuerpo
+                if(vidas<=2){
+                ctx.beginPath();
+                ctx.moveTo(150,60);
+                ctx.lineTo(150,100);
+                ctx.stroke(); 
+                }
+                //dibuja los brazos
+                if (vidas<=1) {
+                ctx.beginPath();
+                ctx.moveTo(150,60);
+                ctx.lineTo(130,100);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(150,60);
+                ctx.lineTo(170,100);
+                ctx.stroke();
+                }
+                //dibuja las piernas
+                if (vidas==0) {
+                ctx.beginPath();
+                ctx.moveTo(150,100);
+                ctx.lineTo(170,130);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(150,100);
+                ctx.lineTo(130,130);
+                ctx.stroke();
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>
+
